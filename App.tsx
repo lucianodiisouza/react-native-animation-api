@@ -1,13 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Button,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 
 const SIZE = 100;
 
