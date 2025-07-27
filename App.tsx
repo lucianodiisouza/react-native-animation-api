@@ -1,8 +1,18 @@
-import { useEffect, useRef } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Button,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+const SIZE = 100;
 
 export default function App() {
-  const progress = useRef(new Animated.Value(0)).current;
+  const progress = useRef(new Animated.Value(0.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -19,7 +29,25 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Animated.View
-        style={[styles.square, { opacity: progress, transform: [{ scale }] }]}
+        style={[
+          styles.square,
+          {
+            opacity: progress,
+            transform: [
+              { scale },
+              {
+                rotate: progress.interpolate({
+                  inputRange: [0.5, 1],
+                  outputRange: [`${Math.PI}rad`, `${2 * Math.PI}rad`],
+                }),
+              },
+            ],
+            borderRadius: progress.interpolate({
+              inputRange: [0.5, 1],
+              outputRange: [SIZE / 4, SIZE / 2],
+            }),
+          },
+        ]}
       />
     </View>
   );
@@ -33,8 +61,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   square: {
-    width: 100,
-    height: 100,
+    width: SIZE,
+    height: SIZE,
     backgroundColor: "rgba(0,0,255, 0.5)",
   },
 });
