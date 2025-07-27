@@ -8,14 +8,43 @@ export default function App() {
   const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    Animated.timing(progress, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-    Animated.timing(scale, {
-      toValue: 2,
-      useNativeDriver: true,
-    }).start();
+    // we can use timing, spring, etc
+    // ref: https://reactnative.dev/docs/animations
+
+    // Animated.timing(progress, {
+    //   toValue: 1,
+    //   useNativeDriver: true,
+    // }).start();
+    // Animated.timing(scale, {
+    //   toValue: 2,
+    //   useNativeDriver: true,
+    // }).start();
+
+    Animated.loop(
+      Animated.parallel([
+        Animated.sequence([
+          Animated.spring(progress, {
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+          Animated.spring(progress, {
+            toValue: 0.5,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.spring(scale, {
+            toValue: 2,
+            useNativeDriver: true,
+          }),
+          Animated.spring(scale, {
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+        ]),
+      ])
+    )
+    .start();
   }, []);
 
   return (
