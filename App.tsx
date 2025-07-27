@@ -1,9 +1,26 @@
-import { StyleSheet, View } from "react-native";
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 
 export default function App() {
+  const progress = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.timing(progress, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(scale, {
+      toValue: 2,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={styles.square} />
+      <Animated.View
+        style={[styles.square, { opacity: progress, transform: [{ scale }] }]}
+      />
     </View>
   );
 }
