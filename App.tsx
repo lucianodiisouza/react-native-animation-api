@@ -7,45 +7,31 @@ export default function App() {
   const progress = useRef(new Animated.Value(0.5)).current;
   const scale = useRef(new Animated.Value(1)).current;
 
+  const springConfig = (toValue: number) => ({
+    toValue,
+    useNativeDriver: true,
+  });
+
   useEffect(() => {
-    // we can use timing, spring, etc
-    // ref: https://reactnative.dev/docs/animations
-
-    // Animated.timing(progress, {
-    //   toValue: 1,
-    //   useNativeDriver: true,
-    // }).start();
-    // Animated.timing(scale, {
-    //   toValue: 2,
-    //   useNativeDriver: true,
-    // }).start();
-
-    Animated.loop(
+    const loop = Animated.loop(
       Animated.parallel([
         Animated.sequence([
-          Animated.spring(progress, {
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-          Animated.spring(progress, {
-            toValue: 0.5,
-            useNativeDriver: true,
-          }),
+          Animated.spring(progress, springConfig(1)),
+          Animated.spring(progress, springConfig(0.5)),
         ]),
         Animated.sequence([
-          Animated.spring(scale, {
-            toValue: 2,
-            useNativeDriver: true,
-          }),
-          Animated.spring(scale, {
-            toValue: 1,
-            useNativeDriver: true,
-          }),
+          Animated.spring(scale, springConfig(2)),
+          Animated.spring(scale, springConfig(1)),
         ]),
       ])
-    )
-    .start();
-  }, []);
+    );
+
+    loop.start();
+
+    return () => {
+      loop.stop();
+    };
+  }, [progress, scale]);
 
   return (
     <View style={styles.container}>
@@ -59,7 +45,7 @@ export default function App() {
               {
                 rotate: progress.interpolate({
                   inputRange: [0.5, 1],
-                  outputRange: [`${Math.PI}rad`, `${2 * Math.PI}rad`],
+                  outputRange: ["180deg", "360deg"],
                 }),
               },
             ],
@@ -84,6 +70,6 @@ const styles = StyleSheet.create({
   square: {
     width: SIZE,
     height: SIZE,
-    backgroundColor: "rgba(0,0,255, 0.5)",
+    backgroundColor: "rgba(0,0,255,0.5)",
   },
 });
